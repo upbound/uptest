@@ -1,4 +1,12 @@
-# UPTEST
+# Crossplane Provider Tools
+
+This repository contains several tools to aid Crossplane Provider development.
+* [Uptest](#uptest): Integration testing tool for all resources complaint with Crossplane
+  Resource Model (XRM).
+* [Updoc](#updoc): Indexer and uploader for documentation files to be shown in the Upbound
+  Marketplace.
+
+## Uptest
 
 The end to end integration testing tool for Crossplane providers and configurations.
 
@@ -7,7 +15,7 @@ by applying the provided examples and waiting for the expected conditions. Other
 insert dynamic values into the examples and supports running scripts as hooks just before and right after applying
 the examples.
 
-## Usage
+### Usage
 
 ```shell
 $ uptest e2e --help
@@ -34,13 +42,13 @@ Args:
 Uptest expects a running control-plane (a.k.a. k8s + crossplane) where required providers are running and/or required
 configuration were applied.
 
-### Example: 
+#### Example: 
 
 ```shell
 uptest e2e examples/user.yaml,examples/bucket.yaml --setup-script="test/hooks/setup.sh"
 ```
 
-### Hooks
+#### Hooks
 
 There are 4 types of hooks that can be used to customize the test flow:
 
@@ -57,7 +65,7 @@ There are 4 types of hooks that can be used to customize the test flow:
 
 > All hooks need to be executables, please make sure to set the executable bit on your scripts, e.g. with `chmod +x`.
 
-### Troubleshooting
+#### Troubleshooting
 
 Uptest uses [kuttl](https://kuttl.dev/) under the hood and generates a `kuttl` test case based on the provided input.
 You can inspect the generated kuttl test case by checking the temporary test directory which is printed in the beginning
@@ -67,11 +75,33 @@ of uptest e2e output. For example:
 Running kuttl tests at /var/folders/_5/jc7399qx6cn6t5535npv9z4c0000gn/T/uptest-e2e
 ```
 
-## Report a Bug
+## Updoc
+
+Updoc parses the given directory for markdown files, parses them and uploads an
+ordered index to given GCP bucket to be processed by Upbound Marketplace.
+
+### Example Usage
+
+Generate the index file.
+```console
+updoc generate --docs-dir=docs
+```
+
+Upload docs and the index file.
+```console
+updoc upload \
+  --docs-dir=docs \
+  --name=provider-aws \
+  --version=v0.17 \
+  --bucket-name=provider-docs-bucket \
+  --cdn-domain=https://someurl.upbound.io
+```
+
+# Report a Bug
 
 For filing bugs, suggesting improvements, or requesting new features, please
 open an [issue](https://github.com/upbound/uptest/issues).
 
-## Licensing
+# Licensing
 
-Uptest is under the Apache 2.0 license.
+All tools in this repository are under the Apache 2.0 license.
